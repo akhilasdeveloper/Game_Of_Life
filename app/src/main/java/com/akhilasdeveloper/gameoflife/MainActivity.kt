@@ -40,8 +40,10 @@ class MainActivity : AppCompatActivity() {
             spanGridView.clearPoint(it)
         }, onPlay = {
             binding.bottomAppBar.menu.findItem(R.id.play_stop).icon = ResourcesCompat.getDrawable(resources,R.drawable.ic_round_stop_24,this.theme)
+            binding.bottomAppBar.menu.findItem(R.id.next_step).isVisible = false
         }, onPause = {
             binding.bottomAppBar.menu.findItem(R.id.play_stop).icon = ResourcesCompat.getDrawable(resources,R.drawable.ic_round_play_arrow_24,this.theme)
+            binding.bottomAppBar.menu.findItem(R.id.next_step).isVisible = true
         }, statics = {
             binding.message.text = "Generation: ${it.generation}\nAlive: ${it.alive}"
         })
@@ -67,6 +69,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.info -> {
                     bottomSheetMessagedBehavior.toggleSheet()
+                    true
+                }
+                R.id.next_step -> {
+                    gameOfLife.calculateNextGen()
                     true
                 }
                 else -> false

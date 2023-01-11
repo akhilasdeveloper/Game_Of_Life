@@ -5,9 +5,9 @@ import kotlinx.coroutines.*
 import timber.log.Timber
 import java.util.concurrent.ConcurrentHashMap
 
-class GameOfLife() {
+class GameOfLife {
     private val tempGen = ConcurrentHashMap<Point, Int>()
-    private var gridHash: ConcurrentHashMap<Point, Int> = ConcurrentHashMap<Point, Int>()
+    private var gridHash = ConcurrentHashMap<Point, Int>()
     private var job: Job? = null
 
     private var statics: ((Statics) -> Unit)? = null
@@ -67,7 +67,7 @@ class GameOfLife() {
                 statics?.invoke(
                     Statics(
                         generation = generation,
-                        alive = gridHash.size.toLong()
+                        alive = gridHash.filter { it.value and 1 == 1 }.size.toLong()
                     )
                 )
                 delay(1)
@@ -94,12 +94,7 @@ class GameOfLife() {
         Point(px.x - 1, px.y),
     )
 
-    private fun isSet(px: Point): Boolean {
-        gridHash[px]?.let {
-            return (it and 1) == 1
-        }
-        return false
-    }
+    private fun isSet(px: Point): Boolean = ((gridHash[px]?:0) and 1) == 1
 
     fun setBit(px: Point) {
         if (!isSet(px)) {
@@ -111,7 +106,7 @@ class GameOfLife() {
                 var dat = gridHash[it] ?: 0
                 dat += 2
                 gridHash[it] = dat
-                if (gridHash[it] ?: 0 == 0)
+                if ((gridHash[it] ?: 0) == 0)
                     gridHash.remove(it)
             }
         }
@@ -128,13 +123,13 @@ class GameOfLife() {
                 var dat = gridHash[it] ?: 0
                 dat -= 2
                 gridHash[it] = dat
-                if (gridHash[it] ?: 0 == 0)
+                if ((gridHash[it] ?: 0) == 0)
                     gridHash.remove(it)
             }
         }
     }
 
-    private fun calculateNextGen() {
+    fun calculateNextGen() {
 
         try {
             tempGen.putAll(gridHash)
