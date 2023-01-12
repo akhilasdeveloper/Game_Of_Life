@@ -19,6 +19,8 @@ class GameOfLife {
     private var isPaused = true
     private var generation = 0L
     var delay = 0L
+    private var generateRules = arrayListOf<Int>()
+    private var surviveRules = arrayListOf<Int>()
 
     init {
         generateInfo()
@@ -129,6 +131,16 @@ class GameOfLife {
         }
     }
 
+    fun setGenerateRules(generateRules: ArrayList<Int>){
+        this.generateRules.clear()
+        this.generateRules.addAll(generateRules)
+    }
+
+    fun setSurviveRules(surviveRules: ArrayList<Int>){
+        this.surviveRules.clear()
+        this.surviveRules.addAll(surviveRules)
+    }
+
     fun calculateNextGen() {
 
         try {
@@ -136,11 +148,11 @@ class GameOfLife {
             tempGen.forEach {
                 val neighbours = it.value shr 1
                 if (it.value and 1 == 1) {
-                    if ((neighbours != 2) && (neighbours != 3)) {
+                    if (!surviveRules.contains(neighbours)) {
                         clearBit(it.key)
                     }
                 } else {
-                    if (neighbours == 3) {
+                    if (generateRules.contains(neighbours)) {
                         setBit(it.key)
                     }
                 }

@@ -14,8 +14,8 @@
         app:gridColor="@color/grid_bg_color"
         app:lineColor="@color/line_color"
         app:lineWidth=".1dp"
-        app:maxScale="10dp"
-        app:minScale="1dp"
+        app:maxResolution="10dp"
+        app:minResolution="1dp"
         app:scale=".5" />
 
 
@@ -36,18 +36,18 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Generation: 0"
-                android:id="@+id/message"
-                android:background="@color/messageColor"
-                android:textColor="@color/cardColor"
                 android:layout_gravity="bottom"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
+                android:background="@color/messageColor"
                 android:paddingStart="10dp"
+                android:paddingTop="10dp"
                 android:paddingEnd="10dp"
-                android:textSize="14sp"/>
+                android:paddingBottom="10dp"
+                android:text="Generation: 0"
+                android:textColor="@color/cardColor"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/close_summary"
@@ -63,7 +63,8 @@
 
     </LinearLayout>
 
-    <LinearLayout
+
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/bottom_sheet_settings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -79,49 +80,214 @@
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         app:layout_insetEdge="bottom">
 
-        <CheckBox
-            android:id="@+id/gridEnabled"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:padding="10dp"
-            android:text="Enable grid"
-            android:textColor="@color/system_for"
-            app:buttonTint="@color/accent" />
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="Brush size"
-            android:textColor="@color/system_for" />
+            android:orientation="vertical">
 
-        <com.google.android.material.slider.Slider
-            android:id="@+id/node_slide"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:stepSize="1"
-            android:valueFrom="1"
-            android:valueTo="3" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="Animation Delay (ms)"
-            android:textColor="@color/system_for" />
+            <CheckBox
+                android:id="@+id/gridEnabled"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:padding="10dp"
+                android:text="Enable grid"
+                android:textColor="@color/system_for"
+                app:buttonTint="@color/accent" />
 
-        <com.google.android.material.slider.Slider
-            android:id="@+id/speed_slide"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:stepSize="1"
-            android:valueFrom="0"
-            android:valueTo="50" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Brush size"
+                android:textColor="@color/system_for" />
 
-    </LinearLayout>
+            <com.google.android.material.slider.Slider
+                android:id="@+id/node_slide"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:stepSize="1"
+                android:valueFrom="1"
+                android:valueTo="3" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Animation Delay (ms)"
+                android:textColor="@color/system_for" />
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/speed_slide"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:stepSize="1"
+                android:valueFrom="0"
+                android:valueTo="50" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Rules"
+                android:textColor="@color/system_for"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Generate when neighbour count"
+                android:textColor="@color/system_for" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp">
+
+                <CheckBox
+                    android:id="@+id/gen_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1"
+                    app:buttonTint="@color/accent" />
+
+                <CheckBox
+                    android:id="@+id/gen_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2"
+                    app:buttonTint="@color/accent" />
+
+                <CheckBox
+                    android:id="@+id/gen_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3"
+                    app:buttonTint="@color/accent" />
+
+                <CheckBox
+                    android:id="@+id/gen_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4"
+                    app:buttonTint="@color/accent" />
+
+                <CheckBox
+                    android:id="@+id/gen_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5"
+                    app:buttonTint="@color/accent" />
+
+                <CheckBox
+                    android:id="@+id/gen_6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="6"
+                    app:buttonTint="@color/accent" />
+
+                <CheckBox
+                    android:id="@+id/gen_7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="7"
+                    app:buttonTint="@color/accent" />
+
+                <CheckBox
+                    android:id="@+id/gen_8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="8"
+                    app:buttonTint="@color/accent" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Survive when neighbour count"
+                android:textColor="@color/system_for" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp">
+
+                <CheckBox
+                    android:id="@+id/sur_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1"
+                    app:buttonTint="@color/accent" />
+
+                <CheckBox
+                    android:id="@+id/sur_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2"
+                    app:buttonTint="@color/accent" />
+
+                <CheckBox
+                    android:id="@+id/sur_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3"
+                    app:buttonTint="@color/accent" />
+
+                <CheckBox
+                    android:id="@+id/sur_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4"
+                    app:buttonTint="@color/accent" />
+
+                <CheckBox
+                    android:id="@+id/sur_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5"
+                    app:buttonTint="@color/accent" />
+
+                <CheckBox
+                    android:id="@+id/sur_6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="6"
+                    app:buttonTint="@color/accent" />
+
+                <CheckBox
+                    android:id="@+id/sur_7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="7"
+                    app:buttonTint="@color/accent" />
+
+                <CheckBox
+                    android:id="@+id/sur_8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="8"
+                    app:buttonTint="@color/accent" />
+
+            </LinearLayout>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reset Rule"
+                android:id="@+id/resetRule"/>
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomAppBar"
