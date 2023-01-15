@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var spanGridView:SpanGridView
+    private lateinit var spanGridView: SpanGridView
     private val gameOfLife = GameOfLife()
     private lateinit var bottomSheetSettingsBehavior: BottomSheetBehavior<NestedScrollView>
     private lateinit var bottomSheetMessagedBehavior: BottomSheetBehavior<LinearLayout>
@@ -36,17 +36,26 @@ class MainActivity : AppCompatActivity() {
         bottomSheetMessagedBehavior.toggleSheet()
 
         gameOfLife.setListener(onSetBit = {
-            spanGridView.plotPoint(it, ContextCompat.getColor(this,R.color.cell_color))
+            spanGridView.plotPoint(it, ContextCompat.getColor(this, R.color.cell_color))
         }, onClearBit = {
             spanGridView.clearPoint(it)
         }, onPlay = {
-            binding.bottomAppBar.menu.findItem(R.id.play_stop).icon = ResourcesCompat.getDrawable(resources,R.drawable.ic_round_stop_24,this.theme)
+            binding.bottomAppBar.menu.findItem(R.id.play_stop).icon =
+                ResourcesCompat.getDrawable(resources, R.drawable.ic_round_stop_24, this.theme)
             binding.bottomAppBar.menu.findItem(R.id.next_step).isVisible = false
         }, onPause = {
-            binding.bottomAppBar.menu.findItem(R.id.play_stop).icon = ResourcesCompat.getDrawable(resources,R.drawable.ic_round_play_arrow_24,this.theme)
+            binding.bottomAppBar.menu.findItem(R.id.play_stop).icon = ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.ic_round_play_arrow_24,
+                this.theme
+            )
             binding.bottomAppBar.menu.findItem(R.id.next_step).isVisible = true
         }, statics = {
             binding.message.text = "Generation: ${it.generation}\nAlive: ${it.alive}"
+        }, onSetBits = {
+            spanGridView.plotPoints(it, ContextCompat.getColor(this, R.color.cell_color))
+        }, onClearBits = {
+            spanGridView.clearPoints(it)
         })
 
         binding.bottomAppBar.setNavigationOnClickListener {
@@ -57,10 +66,18 @@ class MainActivity : AppCompatActivity() {
             when (menuItem.itemId) {
                 R.id.draw_erase -> {
                     isDraw = !isDraw
-                    if (isDraw){
-                        menuItem.icon = ResourcesCompat.getDrawable(resources,R.drawable.ic_eraser_solid,this.theme)
-                    }else{
-                        menuItem.icon = ResourcesCompat.getDrawable(resources,R.drawable.ic_baseline_edit_24,this.theme)
+                    if (isDraw) {
+                        menuItem.icon = ResourcesCompat.getDrawable(
+                            resources,
+                            R.drawable.ic_eraser_solid,
+                            this.theme
+                        )
+                    } else {
+                        menuItem.icon = ResourcesCompat.getDrawable(
+                            resources,
+                            R.drawable.ic_baseline_edit_24,
+                            this.theme
+                        )
                     }
                     true
                 }
@@ -81,7 +98,7 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        spanGridView.setOnTouchListener(object: View.OnTouchListener{
+        spanGridView.setOnTouchListener(object : View.OnTouchListener {
             override fun onTouch(v: View?, event: MotionEvent?): Boolean {
                 when (event?.action) {
                     MotionEvent.ACTION_DOWN -> {
@@ -102,9 +119,9 @@ class MainActivity : AppCompatActivity() {
             SpanGridView.OnGridSelectListener {
 
             override fun onDraw(px: Point) {
-                if (isDraw){
+                if (isDraw) {
                     gameOfLife.setBit(px)
-                }else{
+                } else {
                     gameOfLife.clearBit(px)
                 }
             }
@@ -134,7 +151,7 @@ class MainActivity : AppCompatActivity() {
             setDefaultRule()
         }
 
-        val clickListener = View.OnClickListener{
+        val clickListener = View.OnClickListener {
             setRules()
         }
 

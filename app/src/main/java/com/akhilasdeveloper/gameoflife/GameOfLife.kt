@@ -14,7 +14,9 @@ class GameOfLife {
     private var onPlay: (() -> Unit)? = null
     private var onPause: (() -> Unit)? = null
     private var onSetBit: ((Point) -> Unit)? = null
+    private var onSetBits: ((ArrayList<Point>) -> Unit)? = null
     private var onClearBit: ((Point) -> Unit)? = null
+    private var onClearBits: ((ArrayList<Point>) -> Unit)? = null
     private var isPlaying = false
     private var isPaused = true
     private var generation = 0L
@@ -28,13 +30,17 @@ class GameOfLife {
 
     fun setListener(
         onSetBit: (Point) -> Unit,
+        onSetBits: (ArrayList<Point>) -> Unit,
         onClearBit: (Point) -> Unit,
+        onClearBits: (ArrayList<Point>) -> Unit,
         onPlay: () -> Unit,
         onPause: () -> Unit,
         statics: (Statics) -> Unit
     ) {
+        this.onSetBits = onSetBits
         this.onSetBit = onSetBit
         this.onClearBit = onClearBit
+        this.onClearBits = onClearBits
         this.onPlay = onPlay
         this.onPause = onPause
         this.statics = statics
@@ -114,6 +120,26 @@ class GameOfLife {
         }
     }
 
+    private fun setBits(pxs: ArrayList<Point>) {
+        val setList = arrayListOf<Point>()
+        pxs.forEach { px->
+            if (!isSet(px)) {
+                val data: Int = gridHash[px] ?: 0
+                gridHash[px] = data or 1         //set first bit as 0
+                setList.add(px)
+
+                getNeighbours(px).forEach {
+                    var dat = gridHash[it] ?: 0
+                    dat += 2
+                    gridHash[it] = dat
+                    if ((gridHash[it] ?: 0) == 0)
+                        gridHash.remove(it)
+                }
+            }
+        }
+        onSetBits?.invoke(setList)
+    }
+
     fun clearBit(px: Point) {
         if (isSet(px)) {
             gridHash[px]?.let {
@@ -131,6 +157,27 @@ class GameOfLife {
         }
     }
 
+    private fun clearBits(pxs: ArrayList<Point>) {
+        val clearList = arrayListOf<Point>()
+        pxs.forEach { px ->
+            if (isSet(px)) {
+                gridHash[px]?.let {
+                    gridHash[px] = it and 1.inv()
+                    clearList.add(px)
+                }  //set first bit as 0
+
+                getNeighbours(px).forEach {
+                    var dat = gridHash[it] ?: 0
+                    dat -= 2
+                    gridHash[it] = dat
+                    if ((gridHash[it] ?: 0) == 0)
+                        gridHash.remove(it)
+                }
+            }
+        }
+        onClearBits?.invoke(clearList)
+    }
+
     fun setGenerateRules(generateRules: ArrayList<Int>){
         this.generateRules.clear()
         this.generateRules.addAll(generateRules)
@@ -144,19 +191,25 @@ class GameOfLife {
     fun calculateNextGen() {
 
         try {
+            val setList = arrayListOf<Point>()
+            val clearList = arrayListOf<Point>()
+
             tempGen.putAll(gridHash)
             tempGen.forEach {
                 val neighbours = it.value shr 1
                 if (it.value and 1 == 1) {
                     if (!surviveRules.contains(neighbours)) {
-                        clearBit(it.key)
+                        clearList.add(it.key)
                     }
                 } else {
                     if (generateRules.contains(neighbours)) {
-                        setBit(it.key)
+                        setList.add(it.key)
                     }
                 }
             }
+
+            clearBits(clearList)
+            setBits(setList)
             generation++
         } catch (e: Exception) {
             Timber.e("$e")

@@ -68,6 +68,6 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
     // Grid View
-    implementation 'com.github.akhilasdeveloper:SpanGridView:1.4'
+    implementation 'com.github.akhilasdeveloper:SpanGridView:1.6'
 
 }
